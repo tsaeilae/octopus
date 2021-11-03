@@ -1,0 +1,29 @@
+# DO NOT REMOVE THIS
+theme = "octopus"
+
+# Override these settings with your own
+baseURL = "https://example.org/"
+copyright = "© {year}"
+languageCode = "en-en"
+title = "octopus"
+
+codeFences = false
+# Set to false to disallow raw HTML in markdown files
+[markup.goldmark.renderer]
+unsafe = true
+
+# Controls the navigation
+[[menu.main]]
+name = "Home"
+url = "/"
+weight = 1
+
+[[menu.main]]
+name = "Posts"
+url = "/posts/"
+weight = 2
+
+[[menu.main]]
+name = "Tags"
+url = "/tags/"
+weight = 3

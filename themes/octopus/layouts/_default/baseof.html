@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+{{- partial "head.html" . -}}
+
+<body>
+
+  <div id="content">{{- block "main" . }}{{- end }}</div>
+
+
+
+  {{ $inject := slice "js/shims/process.js" }}
+  {{ $js := resources.Get "js/main.js" | js.Build (dict "minify" false "params" (dict "myparam" "Hugo Rocks!") "inject" $inject ) }}
+  <script src="{{ $js.RelPermalink }}"></script>
+
+  {{ block "scripts" . }} {{ end }}
+</body>
+
+</html>

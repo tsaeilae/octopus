@@ -1,0 +1,21 @@
+{
+  "comments": {
+    "dependencies": {
+      "randomcolor": "project"
+    },
+    "devDependencies": {
+      "randomcolor": "project",
+      "scrape-it": "project",
+      "webpack": "project",
+      "webpack-cli": "project"
+    }
+  },
+  "dependencies": {
+    "randomcolor": "^0.6.2",
+    "scrape-it": "^5.3.2"
+  },
+  "scripts": {
+    "build": "webpack --mode=production",
+    "start": "webpack --mode=development --watch"
+  }
+}

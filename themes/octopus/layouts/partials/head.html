@@ -1,0 +1,15 @@
+<head>
+  <meta charset="utf-8" />
+  <title></title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  {{ if hugo.IsProduction }}
+  {{/* We import from node_modules in development to get code completion etc. working. */}}
+  <script src="https://cdn.jsdelivr.net/npm/randomcolor@0.6.2/randomColor.min.js" crossorigin></script>
+  {{ end }}
+  {{ $scss := resources.Get "scss/main.scss" | resources.ToCSS (dict "outputStyle" "compressed") | fingerprint }}
+  <link rel="stylesheet" href="{{ $scss.Permalink }}" />
+  {{ $title := print .Site.Title " | " .Title }}
+  {{ if .IsHome }}{{ $title = .Site.Title }}{{ end }}
+  <title>{{ $title }}</title>
+</head>
