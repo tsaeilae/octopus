@@ -21,18 +21,18 @@ body {
     #95df82,
     #8aed9f
   );
-  min-height: 100vh;
+  height: 100vh;
 }
 .tiles {
-  height: 100vh;
   display: flex;
-
   align-items: center;
+  height: 100vh;
+ 
+ 
 }
 .tiles__inner {
   display: flex;
   flex-flow: row wrap;
-  align-items: center;
   justify-content: center;
   list-style: none;
   padding: 0;
@@ -40,12 +40,9 @@ body {
 }
 
 .tiles__inner li {
-  //border: 1px solid white;
   flex-grow: 0;
-  //font-size: 1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-shrink: 0;
+  margin: 0;
   span {
     opacity: 0.5;
   }

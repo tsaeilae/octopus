@@ -53,10 +53,9 @@ const stationNames = getStationNames();
 fetch(fetchURl)
   .then(response => response.json())
   .then(data => {
-    console.log(data);
-    // stationIds.forEach((id, index) => {
-    //   console.log(stationNames[index], id, data[id].days[0].temperatureMin, data[id].days[0].temperatureMax);
-    // });
+    stationIds.forEach((id, index) => {
+      console.log(stationNames[index], id, data[id].days[0].temperatureMin, data[id].days[0].temperatureMax);
+    });
   })
   .catch(error => console.error(error));
 
@@ -64,17 +63,25 @@ fetch(fetchURl)
 export class TilesGenerator {
   constructor(options) {
     this.target = options.target;
-    this.tileWidth = options.tileWidth;
+    this.tileWidthMin = options.tileWidthMin;
+    this.tileWidthMax = options.tileWidthMax;
   }
-
-  calcRect = () => {
-   
-    const min = 10;
-    const max = 150;
+  
+  tileWidthAndTotalItems = () => {
+    const min = this.tileWidthMin;
+    const max = this.tileWidthMax;
     let width = [];
     let matches = [];
+    let tileWidthAndTotal = [];
     
+    const getElementsTotal = tileWidth => {
 
+      let tilesInRow = window.innerWidth / tileWidth;
+      let tilesInColumn = window.innerHeight / tileWidth;
+      let elementsTotal = Math.floor(tilesInRow) * Math.floor(tilesInColumn);
+      return elementsTotal;
+    }
+    
     for (let i = min; i <= max; i++) {
       
       if (window.innerWidth % i === 0) {
@@ -82,31 +89,47 @@ export class TilesGenerator {
       } 
     }
 
-    for (let j = 0; j < width.length; j++) {
+    if (width.length) {
+      for (let j = 0; j < width.length; j++) {
 
-      // console.log(width[j], window.innerHeight % width[j]);
-      
-      if (window.innerHeight % width[j] === 0) {
-        matches.push(width[j]);
+        if (window.innerHeight % width[j] === 0) {
+          matches.push(width[j]);
+        }
       }
 
-      
-    }
-  }
+      if (matches.length) {
+        let w = this.randomIndexFromArray(matches);
+        tileWidthAndTotal[0] = w;
 
-  getElementsTotal = () => {
-    // let elementsTotal = (window.innerWidth / this.tileWidth) * (window.innerHeight / this.tileWidth);
-    let tilesInRow = window.innerWidth / this.tileWidth;
-    let tilesInColumn = window.innerHeight / this.tileWidth;
-    let elementsTotal = Math.floor(tilesInRow) * Math.floor(tilesInColumn);
-    console.log(Math.floor(tilesInRow), Math.floor(tilesInColumn), elementsTotal);
-    return elementsTotal;
+        let t = getElementsTotal(w);
+        tileWidthAndTotal[1] = t;
+        
+        return tileWidthAndTotal;
+      }
+    }
+    
+    if (!matches.length) {
+      width = [];
+      for (let i = min; i <= max; i++) {
+        if (i % 2 === 0) {
+          width.push(i);
+        }
+      }
+      
+      let w = this.randomIndexFromArray(width);
+      tileWidthAndTotal[0] = w;
+
+      let t = getElementsTotal(w);
+      tileWidthAndTotal[1] = t;
+      
+      return tileWidthAndTotal;
+    }
   }
 
   randomIndexFromArray = (array) => {
     return array[Math.floor(Math.random()*array.length)];
   }
-
+  
   createItems = () => {
     let colors = randomColor({
       luminosity: 'random',
@@ -114,12 +137,14 @@ export class TilesGenerator {
       count: 12
     });
     
-    let totalItems = this.getElementsTotal();
-    // console.log(totalItems);
     
-    for(let i = 0; i < totalItems; i++) {
-      let minWidth = `width: ${this.tileWidth}px;`;
-      let minHeight = `height: ${this.tileWidth}px;`;
+    let getWidthAndElements = this.tileWidthAndTotalItems();
+    let tileWidth = getWidthAndElements[0];
+    let totalElements = getWidthAndElements[1];
+    
+    for(let i = 0; i < totalElements; i++) {
+      let minWidth = `width: ${tileWidth}px;`;
+      let minHeight = `height: ${tileWidth}px;`;
       let tile = document.createElement('li');
       this.target.appendChild(tile);
       tile.style.cssText = `background-color: ${this.randomIndexFromArray(colors)};` + minWidth + minHeight;
@@ -128,7 +153,6 @@ export class TilesGenerator {
   
   init = () => {
     this.createItems();
-    this.calcRect();
   }
 }
 
@@ -138,13 +162,9 @@ if (tiles) {
   
   const tilesPage = new TilesGenerator({
     target: document.querySelector('.tiles__inner'),
-    tileWidth: 30,
+    tileWidthMin: 20,
+    tileWidthMax: 40
   });
   
   tilesPage.init();
-
 }
-
-
-
-
