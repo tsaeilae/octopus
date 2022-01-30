@@ -1,7 +1,7 @@
 import randomColor from 'randomcolor';
 import { stations } from '../data/stations';
 
-
+const tiles = document.querySelector('.tiles');
 // keyObject = () => {
 //   stations.forEach(station => {
 //     for (const [key, value] of Object.entries(station)) {
@@ -12,52 +12,56 @@ import { stations } from '../data/stations';
 
 // keyObject();
 
-createFetchUrl = () => {
-  const apiUrl = 'https://dwd.api.proxy.bund.dev/v30/stationOverviewExtended?stationIds=';
-  const stationIds = [];
-    
-  stations.forEach(station => {
-    stationIds.push(station.id);
-  });
-
-  const url = apiUrl + stationIds.join();
-  return url;
-}
-
-getStationIds = () => {
-  const stationIds = [];
-  
-  stations.forEach(station => {
-    stationIds.push(station.id);
-  });
-  
-  return stationIds;
-}
-
-getStationNames = () => {
-
-  const stationNames = [];
-
-  stations.forEach(station => {
-    stationNames.push(station.name);
-  });
-  
-  return stationNames;
-
-}
-
-const fetchURl = createFetchUrl();
-const stationIds = getStationIds();
-const stationNames = getStationNames();
-
-fetch(fetchURl)
-  .then(response => response.json())
-  .then(data => {
-    stationIds.forEach((id, index) => {
-      console.log(stationNames[index], id, data[id].days[0].temperatureMin, data[id].days[0].temperatureMax);
+if (tiles) {
+  createFetchUrl = () => {
+    const apiUrl = 'https://dwd.api.proxy.bund.dev/v30/stationOverviewExtended?stationIds=';
+    const stationIds = [];
+      
+    stations.forEach(station => {
+      stationIds.push(station.id);
     });
-  })
-  .catch(error => console.error(error));
+  
+    const url = apiUrl + stationIds.join();
+    return url;
+  }
+  
+  getStationIds = () => {
+    const stationIds = [];
+    
+    stations.forEach(station => {
+      stationIds.push(station.id);
+    });
+    
+    return stationIds;
+  }
+  
+  getStationNames = () => {
+  
+    const stationNames = [];
+  
+    stations.forEach(station => {
+      stationNames.push(station.name);
+    });
+    
+    return stationNames;
+  
+  }
+  
+  const fetchURl = createFetchUrl();
+  const stationIds = getStationIds();
+  const stationNames = getStationNames();
+  
+  fetch(fetchURl)
+    .then(response => response.json())
+    .then(data => {
+      stationIds.forEach((id, index) => {
+        console.log(stationNames[index], id, data[id].days[0].temperatureMin, data[id].days[0].temperatureMax);
+      });
+    })
+    .catch(error => console.error(error));
+}
+
+
 
 
 export class TilesGenerator {
@@ -134,7 +138,7 @@ export class TilesGenerator {
     let colors = randomColor({
       luminosity: 'random',
       hue: 'random',
-      count: 12
+      count: 6
     });
     
     
@@ -156,14 +160,14 @@ export class TilesGenerator {
   }
 }
 
-const tiles = document.querySelector('.tiles');
+
 
 if (tiles) {
   
   const tilesPage = new TilesGenerator({
     target: document.querySelector('.tiles__inner'),
-    tileWidthMin: 20,
-    tileWidthMax: 40
+    tileWidthMin: 30,
+    tileWidthMax: 100
   });
   
   tilesPage.init();
